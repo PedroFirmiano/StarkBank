@@ -14,6 +14,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.Configure<StarkBankOptions>(
     builder.Configuration.GetSection("StarkBankClient"));
 
+builder.Services.Configure<WebhookOptions>(
+    builder.Configuration.GetSection("StarkBankClient"));
 
 
 var app = builder.Build();

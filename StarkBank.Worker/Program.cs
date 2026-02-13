@@ -1,11 +1,7 @@
 using Microsoft.Extensions.Options;
 using StarkBank;
 using StarkBankTest.Api.Configs;
-using StarkBankTest.Domain.Client;
-using StarkBankTest.Domain.Client.Interface;
 using StarkBankTest.Worker;
-using StarkCore.Utils;
-using System.Net.Http.Headers;
 
 var builder = Host.CreateApplicationBuilder(args);
 builder.Services.AddHostedService<Worker>();

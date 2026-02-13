@@ -12,4 +12,8 @@
     <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.3" />
     <PackageReference Include="StarkBank" Version="2.21.0" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\StarkBank.Api\StarkBankTest.Api.csproj" />
+  </ItemGroup>
 </Project>
