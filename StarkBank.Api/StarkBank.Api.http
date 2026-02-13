@@ -1,0 +1,6 @@
+@StarkBankTest.Api_HostAddress = http://localhost:5102
+
+GET {{StarkBankTest.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
