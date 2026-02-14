@@ -1,4 +1,6 @@
-﻿public interface ITransferService
+﻿using StarkBank;
+
+public interface ITransferService
 {
-    List<StarkBank.Transfer> CreateTransferFromInvoiceEvent(StarkWebhookDto starkEvent);
+    List<StarkBank.Transfer> CreateTransferFromInvoiceEvent(Event starkEvent);
 }

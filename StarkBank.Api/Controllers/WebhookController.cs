@@ -23,8 +23,6 @@ public class WebhookController : ControllerBase
     {
         IEnumerable<StarkBank.Webhook> webhooks = StarkBank.Webhook.Query();
         return webhooks;
-
-
     }
 
     [HttpPost("CreateWebook")]
@@ -41,11 +39,10 @@ public class WebhookController : ControllerBase
     public void DeleteWebhook(string webhookId)
     {
         StarkBank.Webhook webhook = StarkBank.Webhook.Delete(webhookId);
-
     }
 
     [HttpPost("ReceiveEvent")]
-    public IActionResult ReceiveEvent([FromBody] StarkWebhookDto starkEvent)
+    public IActionResult ReceiveEvent([FromBody] Event starkEvent)
     {
         var transfers = _transferService.CreateTransferFromInvoiceEvent(starkEvent);
 

@@ -1,15 +1,18 @@
-﻿public class TransferService : ITransferService
-{
-    public List<StarkBank.Transfer> CreateTransferFromInvoiceEvent(StarkWebhookDto starkEvent)
-    {
-        if (starkEvent.Event.Subscription != "invoice")
-            return new List<StarkBank.Transfer>();
+﻿using StarkBank;
 
-        var transfers = StarkBank.Transfer.Create(
-            new List<StarkBank.Transfer>
-            {
+public class TransferService : ITransferService
+{
+    public List<StarkBank.Transfer> CreateTransferFromInvoiceEvent(Event starkEvent)
+    {
+        if (starkEvent.Subscription != "invoice")
+        {
+            StarkBank.Invoice.Log log = starkEvent.Log as StarkBank.Invoice.Log;
+
+            var transfers = StarkBank.Transfer.Create(
+                new List<StarkBank.Transfer>
+                {
                 new StarkBank.Transfer(
-                    amount: starkEvent.Event.Log.Transfer.Amount,
+                    amount: log.Invoice.Amount,
                     bankCode: "20018183",
                     branchCode: "0001",
                     accountNumber: "6341320293482496",
@@ -17,8 +20,10 @@
                     name: "Stark Bank S.A.",
                     externalID: Guid.NewGuid().ToString()
                 )
-            });
+                });
 
-        return transfers;
+            return transfers;
+        }
+        return new List<Transfer>();
     }
 }
