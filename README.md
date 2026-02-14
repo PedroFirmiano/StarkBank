@@ -62,10 +62,3 @@ Ultilizado **Variáveis de Ambiente** e appsettings.
 * Webhook configurado no painel da StarkBank
 
 ---
-
-## 📌 Próximos Passos
-
-* Implementar CI/CD
-* Adicionar logs estruturados
-* Configurar monitoramento
-* Evoluir para arquitetura com Load Balancer e Auto Scaling
