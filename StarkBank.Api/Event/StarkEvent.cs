@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-public class StarkWebhookDto
+public class StarkWebhookDto 
 {
     [JsonPropertyName("event")]
     public StarkEvent Event { get; set; }
@@ -10,7 +10,7 @@ public class StarkWebhookDto
 
 public class StarkEvent
 {
-    [JsonPropertyName("id")]
+    [JsonPropertyName("Id")]
     public string Id { get; set; }
 
     [JsonPropertyName("isDelivered")]
@@ -26,7 +26,7 @@ public class StarkEvent
     public StarkLog Log { get; set; }
 }
 
-public class StarkLog
+public class StarkLog 
 {
     [JsonPropertyName("id")]
     public string Id { get; set; }

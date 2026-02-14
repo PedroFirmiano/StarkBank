@@ -18,12 +18,10 @@ using (var scope = host.Services.CreateScope())
         .GetRequiredService<IOptions<StarkBankOptions>>()
         .Value;
 
-    var privateKey = @" 
------BEGIN EC PRIVATE KEY-----
-MHQCAQEEIOJEQy9YiKsMPCsnDyFsCfAs29rf5D7CGL897YX8pvYpoAcGBSuBBAAK
-oUQDQgAE8YhHMGL8soly8DJ5EZ2WBQ0z0Jss6pXwZNYwEhxNbnRkjdTx97E/dD3L
-pG8cBinL2T6SnKF8ok0GqGcwQz+tqQ==
------END EC PRIVATE KEY-----";
+    var privateKey = Environment
+    .GetEnvironmentVariable("STARKBANK_PRIVATE_KEY")
+    ?.Replace("-----BEGIN EC PRIVATE KEY-----", "-----BEGIN EC PRIVATE KEY-----\n")
+    .Replace("-----END EC PRIVATE KEY-----", "\n-----END EC PRIVATE KEY-----");
 
     Project user = new Project(
         environment: options.Enviroment,

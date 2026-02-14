@@ -1,11 +1,13 @@
-namespace StarkBankTest.Worker;
+using StarkBankTest.Worker.Invoice.Interface;
 
 public class Worker : BackgroundService
 {
+    private readonly IInvoiceService _invoiceService;
     private readonly ILogger<Worker> _logger;
 
-    public Worker(ILogger<Worker> logger)
+    public Worker(IInvoiceService invoiceService, ILogger<Worker> logger)
     {
+        _invoiceService = invoiceService;
         _logger = logger;
     }
 
@@ -13,87 +15,12 @@ public class Worker : BackgroundService
     {
         while (!stoppingToken.IsCancellationRequested)
         {
-            _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
+            var invoices = await _invoiceService.CreateInvoicesAsync();
 
-
-
-            List<StarkBank.Invoice> invoices = StarkBank.Invoice.Create(
-                new List<StarkBank.Invoice> {
-                new StarkBank.Invoice(
-                amount: 400000,
-                descriptions: new List<Dictionary<string, object>>() {
-                    new Dictionary<string, object> {
-                        {"key", "Arya"},
-                        {"value", "Not today"}
-                    }
-                },
-                discounts: new List<Dictionary<string, object>>() {
-                    new Dictionary<string, object> {
-                        {"percentage", 10},
-                        {"due", new DateTime(2026, 03, 12, 20, 30, 0)}
-                    }
-                },
-                due: new DateTime(2026, 05, 12, 20, 30, 0),
-                expiration: 123456789,
-                fine: 2.5,
-                interest: 1.3,
-                name: "Arya Stark",
-                tags: new List<string> { "New sword", "Invoice #1234" },
-                taxID: "012.345.678-90"
-            ),
-                new StarkBank.Invoice(
-                amount: 400000,
-                descriptions: new List<Dictionary<string, object>>() {
-                    new Dictionary<string, object> {
-                        {"key", "Pedro"},
-                        {"value", "Not today"}
-                    }
-                },
-                discounts: new List<Dictionary<string, object>>() {
-                    new Dictionary<string, object> {
-                        {"percentage", 10},
-                        {"due", new DateTime(2026, 03, 12, 20, 30, 0)}
-                    }
-                },
-                due: new DateTime(2026, 05, 12, 20, 30, 0),
-                expiration: 123456789,
-                fine: 2.5,
-                interest: 1.3,
-                name: "Pedro Stark",
-                tags: new List<string> { "New sword", "Invoice #1234" },
-                taxID: "012.345.678-90"
-            ),
-                new StarkBank.Invoice(
-                amount: 400000,
-                descriptions: new List<Dictionary<string, object>>() {
-                    new Dictionary<string, object> {
-                        {"key", "Tony"},
-                        {"value", "Not today"}
-                    }
-                },
-                discounts: new List<Dictionary<string, object>>() {
-                    new Dictionary<string, object> {
-                        {"percentage", 10},
-                        {"due", new DateTime(2026, 03, 12, 20, 30, 0)}
-                    }
-                },
-                due: new DateTime(2026, 05, 12, 20, 30, 0),
-                expiration: 123456789,
-                fine: 2.5,
-                interest: 1.3,
-                name: "Tony Stark",
-                tags: new List<string> { "New sword", "Invoice #1234" },
-                taxID: "012.345.678-90"
-            )
-                }
-
-            );
-
-            foreach (StarkBank.Invoice invoice in invoices)
+            foreach (var invoice in invoices)
             {
-                Console.WriteLine(invoice);
+                _logger.LogInformation("Invoice criada: {Id}", invoice.Id);
             }
-
 
             await Task.Delay(TimeSpan.FromHours(3), stoppingToken);
         }

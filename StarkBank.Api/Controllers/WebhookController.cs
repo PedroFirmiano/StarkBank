@@ -10,42 +10,45 @@ namespace StarkBankTest.Api.Controllers;
 public class WebhookController : ControllerBase
 {
     private readonly WebhookOptions _options;
-    public WebhookController(IOptions<WebhookOptions> options)
+    private readonly ITransferService _transferService;
+
+    public WebhookController(IOptions<WebhookOptions> options, ITransferService transferService)
     {
-        _options= options.Value;
+        _options = options.Value;
+        _transferService = transferService;
+    }
+
+    [HttpGet("GetWebhooks")]
+    public IEnumerable<StarkBank.Webhook> GetWebhooks()
+    {
+        IEnumerable<StarkBank.Webhook> webhooks = StarkBank.Webhook.Query();
+        return webhooks;
+
+
     }
 
     [HttpPost("CreateWebook")]
     public void CreateWebhook(string webhookUrl)
     {
-        StarkBank.Webhook webhook = StarkBank.Webhook.Create(
+        Webhook webhook = StarkBank.Webhook.Create(
             url: webhookUrl,
-            subscriptions: new List<string> { "transfer", "boleto", "boleto-payment", "utility-payment" }
+            subscriptions: new List<string> { "invoice", "boleto", "boleto-payment", "utility-payment" }
         );
 
     }
 
-    [HttpPost("ReceiveEvent")]
-    public void ReceiveEvent(StarkEvent starkEvent)
+    [HttpDelete("DeleteWebhook")]
+    public void DeleteWebhook(string webhookId)
     {
-        List<StarkBank.Transfer> transfers = StarkBank.Transfer.Create(
-            new List<StarkBank.Transfer> {
-        new StarkBank.Transfer(
-            amount: starkEvent.Log.Transfer.Amount,
-            bankCode: "20018183",
-            branchCode: "0001",
-            accountNumber: "6341320293482496",
-            taxID: "20.018.183/0001-80",
-            name: "Stark Bank S.A.",
-            externalID: "my-external-id"
-            
-             )
-            }
-        );
+        StarkBank.Webhook webhook = StarkBank.Webhook.Delete(webhookId);
 
-        foreach (StarkBank.Transfer transfer in transfers)
-        {
-            Console.WriteLine(transfer);
-        }
+    }
+
+    [HttpPost("ReceiveEvent")]
+    public IActionResult ReceiveEvent([FromBody] StarkWebhookDto starkEvent)
+    {
+        var transfers = _transferService.CreateTransferFromInvoiceEvent(starkEvent);
+
+        return Ok(transfers);
     }
 }
