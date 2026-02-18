@@ -2,6 +2,8 @@
 using Microsoft.Extensions.Options;
 using StarkBank;
 using StarkBankTest.Api.Configs;
+using StarkBankTest.Api.Services.Interfaces;
+using System.Text.Json;
 
 namespace StarkBankTest.Api.Controllers;
 
@@ -11,11 +13,13 @@ public class WebhookController : ControllerBase
 {
     private readonly WebhookOptions _options;
     private readonly ITransferService _transferService;
+    private readonly IPublicKeyValidator _validator;
 
-    public WebhookController(IOptions<WebhookOptions> options, ITransferService transferService)
+    public WebhookController(IPublicKeyValidator validator, IOptions<WebhookOptions> options, ITransferService transferService)
     {
         _options = options.Value;
         _transferService = transferService;
+        _validator = validator;
     }
 
     [HttpGet("GetWebhooks")]
@@ -42,9 +46,17 @@ public class WebhookController : ControllerBase
     }
 
     [HttpPost("ReceiveEvent")]
-    public IActionResult ReceiveEvent([FromBody] Event starkEvent)
+    public async Task<IActionResult> ReceiveEvent(
+    [FromBody] StarkWebhookDto eventObject)
     {
-        var transfers = _transferService.CreateTransferFromInvoiceEvent(starkEvent);
+        var expected = Request.Headers["Digital-Signature"].FirstOrDefault();
+
+        var valid = await _validator.ValidateAsync(expected);
+
+        if (!valid)
+            return Unauthorized();
+
+        var transfers = _transferService.CreateTransferFromInvoiceEvent(eventObject);
 
         return Ok(transfers);
     }

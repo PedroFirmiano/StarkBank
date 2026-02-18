@@ -19,7 +19,7 @@ public class Worker : BackgroundService
 
             foreach (var invoice in invoices)
             {
-                _logger.LogInformation("Invoice criada: {Id}", invoice.Id);
+                _logger.LogInformation("Invoice criada: {Id}", invoice.ID);
             }
 
             await Task.Delay(TimeSpan.FromHours(3), stoppingToken);

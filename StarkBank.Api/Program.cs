@@ -1,6 +1,10 @@
 using Microsoft.Extensions.Options;
 using StarkBank;
+using StarkBankTest.Api.Client;
+using StarkBankTest.Api.Client.Interface;
 using StarkBankTest.Api.Configs;
+using StarkBankTest.Api.Services;
+using StarkBankTest.Api.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +21,18 @@ builder.Services.Configure<StarkBankOptions>(
 builder.Services.Configure<WebhookOptions>(
     builder.Configuration.GetSection("StarkBankClient"));
 
+builder.Services.AddScoped<ITransferService, TransferService>();
+
+builder.Services.AddHttpClient<IStarkBankClient, StarkBankClient>((sp, client) =>
+{
+    var options = sp
+        .GetRequiredService<IOptions<StarkBankOptions>>()
+        .Value;
+
+    client.BaseAddress = new Uri(options.BaseUrl);
+});
+
+builder.Services.AddScoped<IPublicKeyValidator, PublicKeyValidator>();
 
 var app = builder.Build();
 

@@ -2,17 +2,16 @@
 
 public class TransferService : ITransferService
 {
-    public List<StarkBank.Transfer> CreateTransferFromInvoiceEvent(Event starkEvent)
+    public List<Transfer> CreateTransferFromInvoiceEvent(StarkWebhookDto starkEvent)
     {
-        if (starkEvent.Subscription != "invoice")
+        if (starkEvent.Event.Subscription == "invoice")
         {
-            StarkBank.Invoice.Log log = starkEvent.Log as StarkBank.Invoice.Log;
-
+           
             var transfers = StarkBank.Transfer.Create(
                 new List<StarkBank.Transfer>
                 {
                 new StarkBank.Transfer(
-                    amount: log.Invoice.Amount,
+                    amount: starkEvent.Event.Log.Invoice.Amount,
                     bankCode: "20018183",
                     branchCode: "0001",
                     accountNumber: "6341320293482496",
