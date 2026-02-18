@@ -1,5 +1,5 @@
 ﻿using StarkBankTest.Worker.Invoice.Interface;
-
+namespace StarkBankTest.Worker.Invoice;
 public class InvoiceService : IInvoiceService
 {
     public async Task<List<StarkBank.Invoice>> CreateInvoicesAsync()
@@ -12,7 +12,22 @@ public class InvoiceService : IInvoiceService
                     name: "Arya Stark",
                     taxID: "012.345.678-90",
                     due: DateTime.UtcNow.AddDays(10)
+                ),
+                
+                new StarkBank.Invoice(
+                    amount: 500000,
+                    name: "Tony Stark",
+                    taxID: "012.345.678-90",
+                    due: DateTime.UtcNow.AddDays(10)
+                ),
+                
+                new StarkBank.Invoice(
+                    amount: 600000,
+                    name: "Petter Stark",
+                    taxID: "012.345.678-90",
+                    due: DateTime.UtcNow.AddDays(10)
                 )
+            
             }
         );
 

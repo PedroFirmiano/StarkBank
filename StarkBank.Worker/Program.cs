@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Options;
 using StarkBank;
 using StarkBankTest.Api.Configs;
-using StarkBankTest.Worker;
+using StarkBankTest.Worker.Invoice;
 using StarkBankTest.Worker.Invoice.Interface;
 
 var builder = Host.CreateApplicationBuilder(args);
@@ -10,7 +10,7 @@ builder.Services.Configure<StarkBankOptions>(
     builder.Configuration.GetSection("StarkBankClient"));
 
 builder.Services.AddScoped<ITransferService, TransferService>();
-builder.Services.AddScoped<IInvoiceService, InvoiceService>();
+builder.Services.AddSingleton<IInvoiceService, InvoiceService>();
 
 var host = builder.Build();
 
